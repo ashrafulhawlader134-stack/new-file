@@ -1,35 +1,728 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navigation Bar</title>
-    <link rel="stylesheet" href="new.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birthday Gift 🎁</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at center, #fff7ef 0%, #f7dcd0 60%, #e8bfb0 100%);
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .scene.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* সিন ১ */
+    .top-hint {
+      position: absolute;
+      top: 21%;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.25rem;
+      color: #8c5a52;
+      letter-spacing: 0.5px;
+    }
+
+    .bottom-hint {
+      position: absolute;
+      bottom: 11%;
+      font-size: 0.75rem;
+      letter-spacing: 3.5px;
+      color: #9e6b63;
+      font-weight: 600;
+      animation: pulseText 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseText {
+      0%, 100% { opacity: 0.55; }
+      50% { opacity: 1; }
+    }
+
+    /* পারফেক্ট শেপের ৩ডি হার্ট */
+    .heart-wrapper {
+      position: relative;
+      width: 76px;
+      height: 76px;
+      animation: heartBeat 2.2s ease-in-out infinite;
+      transition: transform 1.25s cubic-bezier(0.65, 0, 0.35, 1);
+      z-index: 5;
+    }
+
+    .heart-wrapper.zoom-in {
+      animation: none;
+      transform: scale(50);
+    }
+
+    .heart {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 30%, #ff8fa3, #ff1e56 65%, #b8002e);
+      transform: rotate(-45deg);
+      border-radius: 10px;
+      box-shadow: 0 18px 40px rgba(255, 30, 86, 0.4);
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -38px;
+      left: 0;
+      background: radial-gradient(circle at 40% 40%, #ffa6b8, #ff1e56 75%);
+    }
+
+    .heart::after {
+      left: 38px;
+      top: 0;
+      background: radial-gradient(circle at 30% 30%, #ff7597, #d9043d 80%);
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      14% { transform: scale(1.13); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.08); }
+    }
+
+    #bowCanvas {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      cursor: grab;
+    }
+
+    #bowCanvas:active {
+      cursor: grabbing;
+    }
+
+    /* সিন ২: স্মুথ উইশ স্ক্রিন */
+    #scene-wish {
+      background: radial-gradient(circle at center, #ff2a5f 0%, #d9043d 100%);
+      color: #fff;
+      text-align: center;
+      z-index: 20;
+    }
+
+    .wish-content {
+      transform: scale(0.92);
+      opacity: 0;
+      transition: all 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #scene-wish.active .wish-content {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .sub-wish {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.25rem;
+      opacity: 0.92;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .main-wish {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.2rem, 8.5vw, 5.8rem);
+      line-height: 1.05;
+      font-weight: 700;
+      text-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+    }
+
+    .bottom-wish-note {
+      margin-top: 18px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      opacity: 0.85;
+    }
+
+    /* সিন ৩: ভরাট হার্ট গাছ */
+    #scene-tree {
+      background: radial-gradient(circle at 68% 45%, #fff9f2 0%, #f8dfd3 65%, #e9c2b2 100%);
+      z-index: 30;
+    }
+
+    #treeCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .left-message {
+      position: absolute;
+      left: 8%;
+      top: 45%;
+      transform: translateY(-50%);
+      z-index: 35;
+      opacity: 0;
+      transition: all 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #scene-tree.active .left-message {
+      opacity: 1;
+      transition-delay: 1.4s;
+    }
+
+    .small-italic {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: #8c5a52;
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+
+    .script-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3rem, 6.5vw, 5rem);
+      color: #c2183b;
+      line-height: 1.1;
+      font-weight: 400;
+      text-shadow: 0 4px 15px rgba(194, 24, 59, 0.15);
+    }
+
+    .sub-note {
+      margin-top: 8px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: #754a43;
+    }
+
+    .replay-btn {
+      margin-top: 24px;
+      padding: 8px 22px;
+      border: 1.5px solid #c2183b;
+      background: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(4px);
+      color: #c2183b;
+      border-radius: 25px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.35s ease;
+    }
+
+    .replay-btn:hover {
+      background: #c2183b;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(194, 24, 59, 0.25);
+    }
+
+    @media (max-width: 768px) {
+      .left-message {
+        top: 15%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        text-align: center;
+        width: 90%;
+      }
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar" aria-label="Main navigation">
-        <a class="logo" href="#" aria-label="Home">MyWebsite</a>
 
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links">
-            <span class="menu-icon"></span>
-            <span class="sr-only">Toggle menu</span>
-        </button>
+  <!-- সিন ১ -->
+  <div id="scene-bow" class="scene active">
+    <p class="top-hint">a little something, for you</p>
+    <div id="target-heart" class="heart-wrapper">
+      <div class="heart"></div>
+    </div>
+    <canvas id="bowCanvas"></canvas>
+    <p class="bottom-hint">PULL &bull; RELEASE</p>
+  </div>
 
-        <ul class="nav-links" id="nav-links">
-            <li><a class="active" href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+  <!-- সিন ২ -->
+  <div id="scene-wish" class="scene">
+    <div class="wish-content">
+      <p class="sub-wish">make a wish...</p>
+      <h1 class="main-wish">Happy<br>Birthday</h1>
+      <p class="bottom-wish-note">to someone worth celebrating</p>
+    </div>
+  </div>
 
-    <main>
-        <section id="about">
-            <h1>Welcome</h1>
-            <p>This is a responsive navigation bar built with HTML and CSS.</p>
-        </section>
-    </main>
+  <!-- সিন ৩ -->
+  <div id="scene-tree" class="scene">
+    <div class="left-message">
+      <p class="small-italic">and... make it count</p>
+      <h2 class="script-title">Happy Birthday</h2>
+      <p class="sub-note">here's to a year that blooms ✨</p>
+      <button id="replayBtn" class="replay-btn">Replay ↺</button>
+    </div>
+    <canvas id="treeCanvas"></canvas>
+  </div>
 
-    <script src="new.js"></script>
+  <script>
+    const sceneBow = document.getElementById('scene-bow');
+    const sceneWish = document.getElementById('scene-wish');
+    const sceneTree = document.getElementById('scene-tree');
+    const targetHeart = document.getElementById('target-heart');
+    const replayBtn = document.getElementById('replayBtn');
+
+    const bowCanvas = document.getElementById('bowCanvas');
+    const bCtx = bowCanvas.getContext('2d');
+
+    let width, height;
+    function resize() {
+      width = bowCanvas.width = window.innerWidth;
+      height = bowCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    let isDragging = false;
+    let pullX = 0, pullY = 0;
+    let smoothPullX = 0, smoothPullY = 0;
+    let arrowFired = false;
+    let arrowHit = false;
+    let arrowPos = { x: 0, y: 0 };
+    let arrowVel = { x: 0, y: 0 };
+    let arrowAngle = -Math.PI / 4;
+    let particles = [];
+
+    function getBowOrigin() {
+      return { x: width * 0.24, y: height * 0.72 };
+    }
+
+    function getHeartCenter() {
+      return { x: width * 0.5, y: height * 0.5 };
+    }
+
+    function resetBow() {
+      isDragging = false;
+      pullX = 0; pullY = 0;
+      smoothPullX = 0; smoothPullY = 0;
+      arrowFired = false;
+      arrowHit = false;
+      particles = [];
+      targetHeart.classList.remove('zoom-in');
+      sceneBow.classList.add('active');
+      sceneWish.classList.remove('active');
+      sceneTree.classList.remove('active');
+    }
+
+    function startDrag(x, y) {
+      if (arrowFired) return;
+      const origin = getBowOrigin();
+      if (Math.hypot(x - origin.x, y - origin.y) < 160) {
+        isDragging = true;
+      }
+    }
+
+    function moveDrag(x, y) {
+      if (!isDragging || arrowFired) return;
+      const origin = getBowOrigin();
+      let dx = x - origin.x;
+      let dy = y - origin.y;
+      const maxPull = 95;
+      const dist = Math.hypot(dx, dy);
+
+      if (dist > maxPull) {
+        dx = (dx / dist) * maxPull;
+        dy = (dy / dist) * maxPull;
+      }
+      pullX = dx;
+      pullY = dy;
+    }
+
+    function endDrag() {
+      if (!isDragging || arrowFired) return;
+      isDragging = false;
+      const pullDist = Math.hypot(pullX, pullY);
+
+      if (pullDist > 18) {
+        arrowFired = true;
+        const origin = getBowOrigin();
+        arrowPos = { x: origin.x + smoothPullX, y: origin.y + smoothPullY };
+        const speed = Math.min(pullDist * 0.34, 28);
+        arrowVel = {
+          x: -Math.cos(arrowAngle) * speed,
+          y: -Math.sin(arrowAngle) * speed
+        };
+      } else {
+        pullX = 0;
+        pullY = 0;
+      }
+    }
+
+    bowCanvas.addEventListener('mousedown', e => startDrag(e.clientX, e.clientY));
+    window.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
+    window.addEventListener('mouseup', endDrag);
+
+    bowCanvas.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      startDrag(t.clientX, t.clientY);
+    });
+    window.addEventListener('touchmove', e => {
+      const t = e.touches[0];
+      moveDrag(t.clientX, t.clientY);
+    });
+    window.addEventListener('touchend', endDrag);
+
+    function spawnHitParticles(x, y) {
+      const colors = ['#ff1e56', '#ff7597', '#ffb3c6', '#ffd166', '#ffffff'];
+      for (let i = 0; i < 28; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1.5 + Math.random() * 4.5;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: 3 + Math.random() * 4,
+          alpha: 1,
+          color: colors[Math.floor(Math.random() * colors.length)]
+        });
+      }
+    }
+
+    function drawBowAndArrow() {
+      bCtx.clearRect(0, 0, width, height);
+      if (!sceneBow.classList.contains('active')) return;
+
+      // স্মুথ স্প্রিং ইফেক্টের জন্য ইন্টারপোলেশন
+      smoothPullX += (pullX - smoothPullX) * 0.22;
+      smoothPullY += (pullY - smoothPullY) * 0.22;
+
+      const origin = getBowOrigin();
+      const heart = getHeartCenter();
+
+      if (!arrowFired) {
+        if (isDragging && Math.hypot(smoothPullX, smoothPullY) > 5) {
+          arrowAngle = Math.atan2(smoothPullY, smoothPullX);
+        } else {
+          const targetAngle = Math.atan2(origin.y - heart.y, origin.x - heart.x);
+          arrowAngle += (targetAngle - arrowAngle) * 0.15;
+        }
+      }
+
+      const aimAngle = arrowAngle + Math.PI;
+
+      bCtx.save();
+      bCtx.translate(origin.x, origin.y);
+      bCtx.rotate(aimAngle);
+
+      const bowRadius = 50;
+      const pullBack = !arrowFired ? Math.hypot(smoothPullX, smoothPullY) : 0;
+
+      // সুতা
+      bCtx.beginPath();
+      bCtx.moveTo(0, -bowRadius);
+      bCtx.lineTo(-pullBack, 0);
+      bCtx.lineTo(0, bowRadius);
+      bCtx.strokeStyle = '#7a524b';
+      bCtx.lineWidth = 1.6;
+      bCtx.stroke();
+
+      // ধনুক
+      bCtx.beginPath();
+      bCtx.arc(-10, 0, bowRadius, -Math.PI / 2.2, Math.PI / 2.2);
+      bCtx.strokeStyle = '#4a2e2b';
+      bCtx.lineWidth = 4.2;
+      bCtx.lineCap = 'round';
+      bCtx.stroke();
+
+      if (!arrowFired) {
+        drawSingleArrow(bCtx, -pullBack, 0);
+      }
+      bCtx.restore();
+
+      if (arrowFired) {
+        if (!arrowHit) {
+          arrowPos.x += arrowVel.x;
+          arrowPos.y += arrowVel.y;
+
+          if (Math.hypot(arrowPos.x - heart.x, arrowPos.y - heart.y) < 42) {
+            arrowHit = true;
+            spawnHitParticles(heart.x, heart.y);
+            triggerSequence();
+          } else if (arrowPos.x > width + 100 || arrowPos.y < -100 || arrowPos.x < -100 || arrowPos.y > height + 100) {
+            arrowFired = false;
+            pullX = 0; pullY = 0;
+            smoothPullX = 0; smoothPullY = 0;
+          }
+        }
+
+        bCtx.save();
+        bCtx.translate(arrowPos.x, arrowPos.y);
+        bCtx.rotate(aimAngle);
+        drawSingleArrow(bCtx, 0, 0);
+        bCtx.restore();
+      }
+
+      // হিট স্পার্কল পার্টিকেল
+      particles.forEach((p, idx) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.022;
+        if (p.alpha <= 0) {
+          particles.splice(idx, 1);
+          return;
+        }
+        bCtx.save();
+        bCtx.globalAlpha = p.alpha;
+        bCtx.fillStyle = p.color;
+        bCtx.beginPath();
+        bCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        bCtx.fill();
+        bCtx.restore();
+      });
+
+      requestAnimationFrame(drawBowAndArrow);
+    }
+
+    function drawSingleArrow(ctx, offsetX, offsetY) {
+      const len = 76;
+      ctx.beginPath();
+      ctx.moveTo(offsetX, offsetY);
+      ctx.lineTo(offsetX + len, offsetY);
+      ctx.strokeStyle = '#3b2320';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(offsetX + len + 7, offsetY);
+      ctx.lineTo(offsetX + len - 6, offsetY - 5.5);
+      ctx.lineTo(offsetX + len - 3, offsetY);
+      ctx.lineTo(offsetX + len - 6, offsetY + 5.5);
+      ctx.closePath();
+      ctx.fillStyle = '#d9043d';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(offsetX, offsetY);
+      ctx.lineTo(offsetX - 9, offsetY - 5.5);
+      ctx.moveTo(offsetX + 5, offsetY);
+      ctx.lineTo(offsetX - 3, offsetY + 5.5);
+      ctx.strokeStyle = '#ff4d79';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    function triggerSequence() {
+      setTimeout(() => targetHeart.classList.add('zoom-in'), 350);
+      setTimeout(() => {
+        sceneBow.classList.remove('active');
+        sceneWish.classList.add('active');
+      }, 1300);
+      setTimeout(() => {
+        sceneWish.classList.remove('active');
+        sceneTree.classList.add('active');
+        startHeartTreeAnimation();
+      }, 3800);
+    }
+
+    // ========================================================
+    // সিন ৩: ছবির মতো ঘন, সফট ও ভরাট লাভ (Heart) গাছ
+    // ========================================================
+    const treeCanvas = document.getElementById('treeCanvas');
+    const tCtx = treeCanvas.getContext('2d');
+    let treeAnimId;
+
+    function startHeartTreeAnimation() {
+      cancelAnimationFrame(treeAnimId);
+      const w = treeCanvas.width = window.innerWidth;
+      const h = treeCanvas.height = window.innerHeight;
+
+      const isMobile = w < 768;
+      const baseX = isMobile ? w * 0.5 : w * 0.67;
+      const baseY = h * 0.93;
+      const trunkHeight = isMobile ? h * 0.36 : h * 0.46;
+
+      // ছবির মতো গোলাপি, পিচ ও সোনালি-কমলা শেড
+      const colorPalettes = [
+        ['#ff4d79', '#ff8fa3'], // গাঢ় গোলাপি -> হালকা গোলাপি
+        ['#ff758f', '#ffb3c1'], // সফট পিংক
+        ['#ff85a1', '#ffc2d1'], // পেস্টেল পিংক
+        ['#f77f00', '#fcbf49'], // সোনালি কমলা (ছবির হলদে-কমলা আভা)
+        ['#ff9e7d', '#ffd6a5'], // পিচ-গোল্ড
+        ['#e63946', '#ff758f'], // গভীর লালচে গোলাপি
+        ['#ff6b8b', '#ffe5ec']  // লাইট হাইলাইট পিংক
+      ];
+
+      const leaves = [];
+      const totalLeaves = 680; // অনেক বেশি ঘন করার জন্য
+      const heartScale = isMobile ? 9.8 : 14.2;
+      const canopyCenterY = baseY - trunkHeight - (isMobile ? 25 : 42);
+
+      for (let i = 0; i < totalLeaves; i++) {
+        // পারফেক্ট হার্ট শেপ ম্যাথ ফর্মুলা (কিনারাগুলো আরও নিখুঁত রাখার জন্য)
+        const t = Math.random() * Math.PI * 2;
+        // বাইরের বর্ডার একদম পরিষ্কার রাখতে র‍্যাডিয়াস ডিস্ট্রিবিউশন
+        const r = Math.pow(Math.random(), 0.42); 
+        
+        const hx = 16 * Math.pow(Math.sin(t), 3);
+        const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+
+        const palette = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
+        const maxSize = 9 + Math.random() * 11;
+
+        leaves.push({
+          baseX: baseX + hx * heartScale * r,
+          baseY: canopyCenterY + hy * heartScale * r,
+          maxSize: maxSize,
+          currentSize: 0,
+          c1: palette[0],
+          c2: palette[1],
+          delay: 32 + Math.random() * 75,
+          angle: (Math.random() - 0.5) * 0.7,
+          swayOffset: Math.random() * Math.PI * 2,
+          swaySpeed: 0.015 + Math.random() * 0.015
+        });
+      }
+
+      // গভীরতা (Depth) আনার জন্য আগে বড়/গাঢ় পাতা, পরে ছোট/উজ্জ্বল পাতা সাজানো
+      leaves.sort((a, b) => b.maxSize - a.maxSize);
+
+      let frame = 0;
+
+      // ৩ডি সফট গ্রেডিয়েন্ট হার্ট আঁকার ফাংশন
+      function drawSoftHeart(ctx, x, y, size, c1, c2, angle) {
+        if (size <= 0.2) return;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        const s = size / 20;
+        ctx.scale(s, s);
+
+        const grad = ctx.createRadialGradient(-4, -8, 2, 0, -4, 18);
+        grad.addColorStop(0, c2);
+        grad.addColorStop(1, c1);
+
+        ctx.beginPath();
+        ctx.moveTo(0, 7);
+        ctx.bezierCurveTo(0, 3, -11, -5, -11, -11);
+        ctx.bezierCurveTo(-11, -18, -2, -18, 0, -11);
+        ctx.bezierCurveTo(2, -18, 11, -18, 11, -11);
+        ctx.bezierCurveTo(11, -5, 0, 3, 0, 7);
+
+        ctx.shadowColor = 'rgba(217, 4, 61, 0.16)';
+        ctx.shadowBlur = 5;
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function animateTree() {
+        tCtx.clearRect(0, 0, w, h);
+        frame++;
+
+        // ১. স্মুথ Ease-Out গতিতে গাছের কাণ্ড ও ডালপালা বেড়ে ওঠা
+        const rawProg = Math.min(frame / 55, 1);
+        const trunkProgress = 1 - Math.pow(1 - rawProg, 3);
+
+        tCtx.strokeStyle = '#4a2c26';
+        tCtx.lineCap = 'round';
+
+        // মূল কাণ্ড
+        tCtx.beginPath();
+        tCtx.moveTo(baseX, baseY);
+        tCtx.quadraticCurveTo(
+          baseX - 6,
+          baseY - (trunkHeight * trunkProgress) * 0.5,
+          baseX,
+          baseY - trunkHeight * trunkProgress
+        );
+        tCtx.lineWidth = isMobile ? 12 : 16;
+        tCtx.stroke();
+
+        // ছবির মতো ভেতর পর্যন্ত ছড়ানো ডালপালা
+        if (trunkProgress > 0.35) {
+          const bRaw = Math.min((trunkProgress - 0.35) / 0.65, 1);
+          const branchProg = 1 - Math.pow(1 - bRaw, 2.5);
+          const scaleM = isMobile ? 0.68 : 1;
+
+          const branches = [
+            { startY: 0.62, endX: -125, endY: 1.08, lw: 9 },  // বাম দিকের বড় ডাল (ছবির মতো)
+            { startY: 0.68, endX: 115, endY: 1.05, lw: 8 },   // ডান দিকের বড় ডাল
+            { startY: 0.80, endX: -75, endY: 1.25, lw: 6 },   // বাম উপরের শাখা
+            { startY: 0.84, endX: 75, endY: 1.24, lw: 6 },    // ডান উপরের শাখা
+            { startY: 0.92, endX: -15, endY: 1.32, lw: 5 }    // মাঝের শাখা
+          ];
+
+          branches.forEach(b => {
+            const sy = baseY - trunkHeight * b.startY;
+            const ex = baseX + b.endX * branchProg * scaleM;
+            const ey = baseY - trunkHeight * (b.startY + (b.endY - b.startY) * branchProg);
+
+            tCtx.beginPath();
+            tCtx.moveTo(baseX, sy);
+            tCtx.quadraticCurveTo(baseX + b.endX * 0.25 * branchProg * scaleM, sy - 18, ex, ey);
+            tCtx.lineWidth = b.lw * scaleM;
+            tCtx.stroke();
+          });
+        }
+
+        // ২. ঘন ও তুলতুলে হার্ট ফুল ফোটানো + হালকা বাতাসে দোলা
+        leaves.forEach(leaf => {
+          if (frame > leaf.delay) {
+            // স্মুথ ইলাস্টিক গ্রোথ
+            leaf.currentSize += (leaf.maxSize - leaf.currentSize) * 0.085;
+
+            const swayX = Math.sin(frame * leaf.swaySpeed + leaf.swayOffset) * 1.8;
+            const swayY = Math.cos(frame * leaf.swaySpeed + leaf.swayOffset) * 1.2;
+
+            drawSoftHeart(
+              tCtx,
+              leaf.baseX + swayX,
+              leaf.baseY + swayY,
+              leaf.currentSize,
+              leaf.c1,
+              leaf.c2,
+              leaf.angle + swayX * 0.03
+            );
+          }
+        });
+
+        treeAnimId = requestAnimationFrame(animateTree);
+      }
+
+      animateTree();
+    }
+
+    replayBtn.addEventListener('click', () => {
+      cancelAnimationFrame(treeAnimId);
+      resetBow();
+      drawBowAndArrow();
+    });
+
+    drawBowAndArrow();
+  </script>
 </body>
 </html>
